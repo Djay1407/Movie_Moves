@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_moves/Screens/homescr.dart';
+import 'package:movie_moves/Screens/login_signup.dart';
 
 void main() {
   runApp(MyApp());

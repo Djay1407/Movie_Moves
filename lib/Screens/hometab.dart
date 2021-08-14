@@ -46,10 +46,11 @@ class _HomeTabState extends State<HomeTab> {
                 IconButton(
                   onPressed: () {
                     showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AddMovie(updatevalues: updateValues);
-                        });
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AddMovie(updatevalues: updateValues);
+                      },
+                    );
                   },
                   icon: const Icon(Icons.add, color: Colors.white, size: 25.0),
                 )

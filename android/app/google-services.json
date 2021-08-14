@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1018342454166",
+    "project_id": "movie-moves",
+    "storage_bucket": "movie-moves.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1018342454166:android:38f9c5ffbdfab5fa9523b7",
+        "android_client_info": {
+          "package_name": "com.example.movie_moves"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1018342454166-1jl2p61vm94b9na2nmi0kma8h9j1pjr0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.movie_moves",
+            "certificate_hash": "b88baa075efb99aba590a77aca393bac428ea033"
+          }
+        },
+        {
+          "client_id": "1018342454166-74g7l086p7e6gm2ieqf9fjfvi4amdbam.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdZ3MenkCdHy9zo7ph6AZXHux_g11NfQY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1018342454166-74g7l086p7e6gm2ieqf9fjfvi4amdbam.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
