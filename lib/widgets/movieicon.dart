@@ -1,19 +1,12 @@
-// import 'package:core/core.dart';
-// import 'package:movie_moves/Screens/bookpage.dart';
-// import 'dart:html';
-
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:movie_moves/model/model.dart';
+import 'package:movie_moves/widgets/addmovie.dart';
 
 class EventGridItem extends StatelessWidget {
-  const EventGridItem({Key key,this.movie})
-      : super(key: key);
-  // final String imagePath;
-  // final String movieName;
-  // final String dirName;
+  const EventGridItem({Key key, this.movie, this.index}) : super(key: key);
   final MovieItem movie;
+  final int index;
 
   BoxDecoration _buildGradientBackground() {
     return const BoxDecoration(
@@ -50,7 +43,6 @@ class EventGridItem extends StatelessWidget {
                   )
                 : const Placeholder(),
           ),
-          // EventPoster(event: event),
           Container(
             decoration: _buildGradientBackground(),
             padding:
@@ -58,7 +50,7 @@ class EventGridItem extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children:  [
+              children: [
                 Text(
                   //title in the last of each grid picture
                   movie.movieName,
@@ -67,11 +59,10 @@ class EventGridItem extends StatelessWidget {
                     fontSize: 16.0,
                   ),
                 ),
-                const SizedBox(
-                    height: 4.0), //director in the last of each grid picture
+                const SizedBox(height: 4.0),
+                //director in the last of each grid picture
                 Text(
                   movie.director,
-                  // event.directors,
                   style: const TextStyle(
                     fontSize: 12.0,
                     color: Colors.white70,
@@ -80,27 +71,39 @@ class EventGridItem extends StatelessWidget {
               ],
             ),
           ),
-           Positioned(
+          Positioned(
             top: 10.0,
             left: 5.0,
             child: Visibility(
-                visible: true,
-                child: InkWell(
-                  child: const Icon(Icons.delete, color: Colors.white, size: 20.0),
-                  onTap: (){
-                    movie.delete();
-                  },
-                )),
+              visible: true,
+              child: InkWell(
+                child:
+                    const Icon(Icons.delete, color: Colors.white, size: 20.0),
+                onTap: () {
+                  movie.delete();
+                },
+              ),
+            ),
           ),
-          const Positioned(
+          Positioned(
             top: 10.0,
             right: 5.0,
             child: Visibility(
-                visible: true,
-                child: InkWell(
-                  child: Icon(Icons.edit, color: Colors.white, size: 20.0),
-                  onTap: null,
-                )),
+              visible: true,
+              child: InkWell(
+                child: const Icon(Icons.edit, color: Colors.white, size: 20.0),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AddMovie(
+                        index: index,
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
           ),
         ],
       ),
@@ -108,12 +111,3 @@ class EventGridItem extends StatelessWidget {
   }
 }
 
-// class _TextualInfo extends StatelessWidget {
-  
-  
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return 
-//   }
-// }

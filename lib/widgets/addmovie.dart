@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:async';
 import 'dart:io';
-
 import 'package:movie_moves/model/model.dart';
 
 class AddMovie extends StatefulWidget {
-  const AddMovie({Key key, this.updatevalues}) : super(key: key);
-  final updatevalues;
+  const AddMovie({Key key, this.index}) : super(key: key);
+  final int index;
 
   @override
   _AddMovieState createState() => _AddMovieState();
@@ -25,9 +23,11 @@ class _AddMovieState extends State<AddMovie> {
   void getImage() async {
     final _pickedimage = await _picker.pickImage(source: ImageSource.gallery);
     if (_pickedimage != null) {
-      setState(() {
-        image = _pickedimage;
-      });
+      setState(
+        () {
+          image = _pickedimage;
+        },
+      );
     } else {
       debugPrint('No image selected.');
     }
@@ -35,9 +35,14 @@ class _AddMovieState extends State<AddMovie> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     box = Hive.box<MovieItem>("mybox1");
+    if (widget.index != null) {
+      final MovieItem thisMovie = box.get(widget.index);
+      movieNameController.text = thisMovie.movieName;
+      directorNameController.text = thisMovie.director;
+      image = XFile(thisMovie.imagePath);
+    }
   }
 
   @override
@@ -52,30 +57,30 @@ class _AddMovieState extends State<AddMovie> {
       ),
       children: [
         Center(
-            child: Container(
-          color: Colors.white70,
-          height: 200.0,
-          width: 125.0,
-          child: image == null
-              ? Center(
-                  child: IconButton(
-                      onPressed: () {
-                        getImage();
-                      },
-                      icon: const Icon(Icons.camera_alt)),
-                )
-              : Stack(
-                  children: [
-                    Image.file(
-                      File(image.path),
-                      height: 200.0,
-                      width: 125.0,
-                      fit: BoxFit.fill,
-                    ),
-                    Positioned(
-                      top: 10.0,
-                      right: 5.0,
-                      child: Visibility(
+          child: Container(
+            color: Colors.white70,
+            height: 200.0,
+            width: 125.0,
+            child: image == null
+                ? Center(
+                    child: IconButton(
+                        onPressed: () {
+                          getImage();
+                        },
+                        icon: const Icon(Icons.camera_alt)),
+                  )
+                : Stack(
+                    children: [
+                      Image.file(
+                        File(image.path),
+                        height: 200.0,
+                        width: 125.0,
+                        fit: BoxFit.fill,
+                      ),
+                      Positioned(
+                        top: 10.0,
+                        right: 5.0,
+                        child: Visibility(
                           visible: true,
                           child: InkWell(
                             child: const Icon(Icons.camera_alt,
@@ -83,11 +88,13 @@ class _AddMovieState extends State<AddMovie> {
                             onTap: () {
                               getImage();
                             },
-                          )),
-                    ),
-                  ],
-                ),
-        )),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.only(top: 15.0, left: 25.0, right: 25.0),
           child: Column(
@@ -114,7 +121,6 @@ class _AddMovieState extends State<AddMovie> {
                         fontSize: 18.0,
                         color: Colors.black),
                     decoration: const InputDecoration(
-                      // border: OutlineInputBorder(),
                       border: InputBorder.none,
                       hintText: "Name the movie",
                       hintStyle: TextStyle(
@@ -152,7 +158,6 @@ class _AddMovieState extends State<AddMovie> {
                         fontSize: 18.0,
                         color: Colors.black),
                     decoration: const InputDecoration(
-                      // border: OutlineInputBorder(),
                       border: InputBorder.none,
                       hintText: "Name of the director",
                       hintStyle: TextStyle(
@@ -181,15 +186,18 @@ class _AddMovieState extends State<AddMovie> {
             ),
             TextButton(
               onPressed: () {
-                // widget.updatevalues(image.path,movieNameController.text , directorNameController.text , -1);
-                if (image.path != null &&
-                    movieNameController.text != null &&
-                    directorNameController.text != null) {
+                if (image != null &&
+                    movieNameController.text != "" &&
+                    directorNameController.text != "") {
                   MovieItem temp = MovieItem(
                       movieName: movieNameController.text,
                       director: directorNameController.text,
                       imagePath: image.path);
-                  box.add(temp);
+                  if (widget.index == null) {
+                    box.add(temp);
+                  } else {
+                    box.put(widget.index, temp);
+                  }
                 }
                 Navigator.pop(context);
               },
