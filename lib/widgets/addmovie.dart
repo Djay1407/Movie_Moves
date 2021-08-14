@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:async';
 import 'dart:io';
+
+import 'package:movie_moves/model/model.dart';
 
 class AddMovie extends StatefulWidget {
   const AddMovie({Key key, this.updatevalues}) : super(key: key);
@@ -17,6 +20,7 @@ class _AddMovieState extends State<AddMovie> {
   final ImagePicker _picker = ImagePicker();
   XFile image;
   // var scrsz=MediaQuery.of(context).size;
+  Box<MovieItem> box;
 
   void getImage() async {
     final _pickedimage = await _picker.pickImage(source: ImageSource.gallery);
@@ -27,6 +31,13 @@ class _AddMovieState extends State<AddMovie> {
     } else {
       debugPrint('No image selected.');
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    box = Hive.box<MovieItem>("mybox1");
   }
 
   @override
@@ -170,7 +181,16 @@ class _AddMovieState extends State<AddMovie> {
             ),
             TextButton(
               onPressed: () {
-                widget.updatevalues(image.path,movieNameController.text , directorNameController.text , -1);
+                // widget.updatevalues(image.path,movieNameController.text , directorNameController.text , -1);
+                if (image.path != null &&
+                    movieNameController.text != null &&
+                    directorNameController.text != null) {
+                  MovieItem temp = MovieItem(
+                      movieName: movieNameController.text,
+                      director: directorNameController.text,
+                      imagePath: image.path);
+                  box.add(temp);
+                }
                 Navigator.pop(context);
               },
               child: const Text(

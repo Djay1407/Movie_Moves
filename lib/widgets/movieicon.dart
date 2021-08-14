@@ -5,13 +5,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:movie_moves/model/model.dart';
 
 class EventGridItem extends StatelessWidget {
-  const EventGridItem({Key key, this.imagePath, this.movieName, this.dirName})
+  const EventGridItem({Key key,this.movie})
       : super(key: key);
-  final String imagePath;
-  final String movieName;
-  final String dirName;
+  // final String imagePath;
+  // final String movieName;
+  // final String dirName;
+  final MovieItem movie;
 
   BoxDecoration _buildGradientBackground() {
     return const BoxDecoration(
@@ -39,9 +41,9 @@ class EventGridItem extends StatelessWidget {
           Material(
             color: Colors.transparent,
             elevation: 5.0,
-            child: imagePath != null
+            child: movie.imagePath != null
                 ? Image.file(
-                    File(imagePath),
+                    File(movie.imagePath),
                     height: 200.0,
                     width: 125.0,
                     fit: BoxFit.fill,
@@ -56,21 +58,21 @@ class EventGridItem extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children:  [
                 Text(
                   //title in the last of each grid picture
-                  "title",
-                  style: TextStyle(
+                  movie.movieName,
+                  style: const TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 16.0,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                     height: 4.0), //director in the last of each grid picture
                 Text(
-                  "director",
+                  movie.director,
                   // event.directors,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 12.0,
                     color: Colors.white70,
                   ),
@@ -78,14 +80,16 @@ class EventGridItem extends StatelessWidget {
               ],
             ),
           ),
-          const Positioned(
+           Positioned(
             top: 10.0,
             left: 5.0,
             child: Visibility(
                 visible: true,
                 child: InkWell(
-                  child: Icon(Icons.delete, color: Colors.white, size: 20.0),
-                  onTap: null,
+                  child: const Icon(Icons.delete, color: Colors.white, size: 20.0),
+                  onTap: (){
+                    movie.delete();
+                  },
                 )),
           ),
           const Positioned(

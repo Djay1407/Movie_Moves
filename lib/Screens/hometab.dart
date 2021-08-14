@@ -1,3 +1,6 @@
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:movie_moves/model/model.dart';
 import 'package:movie_moves/widgets/addmovie.dart';
 import 'package:movie_moves/widgets/movieicon.dart';
 import 'package:flutter/material.dart';
@@ -10,21 +13,31 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-  List<String> paths = [];
-  List<String> movies = [];
-  List<String> directors = [];
+  
+  Box<MovieItem> box;
+  // List<String> paths = [];
+  // List<String> movies = [];
+  // List<String> directors = [];
 
-  updateValues(String pth, String name, String dir, int editindex) {
-    if (editindex == -1) {
-      paths.add(pth);
-      movies.add(name);
-      directors.add(dir);
-    } else {
-      paths[editindex] = pth;
-      movies[editindex] = name;
-      directors[editindex] = dir;
-    }
-    setState(() {});
+  // updateValues(String pth, String name, String dir, int editindex) {
+  //   if (editindex == -1) {
+  //     paths.add(pth);
+  //     movies.add(name);
+  //     directors.add(dir);
+  //   } else {
+  //     paths[editindex] = pth;
+  //     movies[editindex] = name;
+  //     directors[editindex] = dir;
+  //   }
+  //   setState(() {});
+  // }
+
+  @override
+  void initState() { 
+    super.initState();
+    box = Hive.box<MovieItem>("mybox1");
+    box.clear();
+    // box.close();
   }
 
   @override
@@ -48,7 +61,8 @@ class _HomeTabState extends State<HomeTab> {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return AddMovie(updatevalues: updateValues);
+                        // return AddMovie(updatevalues: updateValues);
+                        return AddMovie();
                       },
                     );
                   },
@@ -60,22 +74,33 @@ class _HomeTabState extends State<HomeTab> {
           padding: const EdgeInsets.all(10.0),
           child: SizedBox(
             height: 200.0,
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: movies.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: SizedBox(
-                      width: 125.0,
-                      child: EventGridItem(
-                        imagePath: paths[index],
-                        movieName: movies[index],
-                        dirName: directors[index],
+            child: ValueListenableBuilder(
+              valueListenable: box.listenable(),
+              builder: (BuildContext context, Box<MovieItem> box, _) {  
+                List<int> keys= box.keys.cast<int>().toList();
+
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  // itemCount: movies.length,
+                  itemCount: keys.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final key = keys[index];
+                    final MovieItem movie= box.get(key);
+                    return Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: SizedBox(
+                        width: 125.0,
+                        child: EventGridItem(
+                          // imagePath: paths[index],
+                          // movieName: movies[index],
+                          // dirName: directors[index],
+                          movie: movie,
+                        ),
                       ),
-                    ),
-                  );
-                }),
+                    );
+                  });
+              },
+            ),
           ),
         ),
         Padding(
