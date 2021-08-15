@@ -1,7 +1,8 @@
 import 'dart:ui';
-import 'package:movie_moves/widgets/login.dart';
-import 'package:movie_moves/widgets/signup.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:movie_moves/provider/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 class LoginSignupScreen extends StatefulWidget {
   const LoginSignupScreen({Key key}) : super(key: key);
@@ -10,29 +11,7 @@ class LoginSignupScreen extends StatefulWidget {
   _LoginSignupScreenState createState() => _LoginSignupScreenState();
 }
 
-class _LoginSignupScreenState extends State<LoginSignupScreen>
-    with SingleTickerProviderStateMixin {
-  PageController _pageController;
-
-  Color left = Colors.white;
-  Color right = Colors.black;
-  Color leftButton = Colors.red[900];
-  Color rightButton;
-
-  @override
-  void dispose() {
-    _pageController?.dispose();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    _pageController = PageController();
-    super.initState();
-  }
-
-//TODO: Apply snackbar to show when invalid data is entered
-
+class _LoginSignupScreenState extends State<LoginSignupScreen> {
   @override
   Widget build(BuildContext context) {
     var scrsz = MediaQuery.of(context).size;
@@ -47,10 +26,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen>
               fit: BoxFit.fill,
             ),
             gradient: LinearGradient(
-              colors: [
-                Colors.red[700],
-                Colors.red[900]
-              ],
+              colors: [Colors.red[700], Colors.red[900]],
               begin: const FractionalOffset(0.0, 0.0),
               end: const FractionalOffset(1.0, 1.0),
               stops: const [0.0, 1.0],
@@ -58,22 +34,25 @@ class _LoginSignupScreenState extends State<LoginSignupScreen>
             ),
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(top: 75.0),
-                child: Text(
-                  "Movie \tMoves",
-                  style: TextStyle(
-                    fontSize: scrsz.height * 0.075,
-                    fontStyle: FontStyle.italic,
-                    letterSpacing: 7.0,
-                    fontWeight: FontWeight.w800,
+                child: Center(
+                  child: Text(
+                    " Movie\nMoves",
+                    style: TextStyle(
+                      fontSize: scrsz.height * 0.07,
+                      fontStyle: FontStyle.italic,
+                      letterSpacing: 7.0,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 45.0),
+                padding: const EdgeInsets.only(top: 45.0),
                 child: Card(
                   elevation: 5.0,
                   color: Colors.white70,
@@ -94,77 +73,67 @@ class _LoginSignupScreenState extends State<LoginSignupScreen>
                           child: Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Expanded(
-                                  child: TextButton(
-                                    style: TextButton.styleFrom(
-                                      shape: ContinuousRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(25.0),
-                                      ),
-                                      primary: left,
-                                      backgroundColor: leftButton,
-                                    ),
-                                    onPressed: _onLogInButtonPress,
-                                    child: const Text(
-                                      "LOG IN",
-                                      style: TextStyle(
-                                        fontSize: 16.0,
-                                      ),
-                                    ),
+                            child: Card(
+                              shape: ContinuousRectangleBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                              ),
+                              color: Colors.red[900],
+                              child: const Center(
+                                child: Text(
+                                  "SIGN IN",
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: Colors.white,
                                   ),
                                 ),
-                                const SizedBox(
-                                  width: 10.0,
-                                ),
-                                Expanded(
-                                  child: TextButton(
-                                    style: TextButton.styleFrom(
-                                      shape: ContinuousRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(25.0),
-                                      ),
-                                      backgroundColor: rightButton,
-                                      primary: right,
-                                    ),
-                                    onPressed: _onSignUpButtonPress,
-                                    child: const Text(
-                                      "SIGN UP",
-                                      style: TextStyle(
-                                        fontSize: 16.0,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: scrsz.height * 0.55,
-                        width: scrsz.width * 0.8,
-                        child: Center(
-                          child: PageView(
-                            controller: _pageController,
-                            onPageChanged: (index) => _onPageChanged(index),
-                            children: <Widget>[
-                              ConstrainedBox(
-                                constraints: const BoxConstraints.expand(),
-                                child: const LoginScreen(),
-                                // child: const SizedBox(height: 100.0,),
-                              ),
-                              ConstrainedBox(
-                                constraints: const BoxConstraints.expand(),
-                                child: const SignUpScreen(),
-                                // child: const SizedBox(height: 100.0,),
-                              ),
-                            ],
+                      const SizedBox(height: 10.0,),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: SizedBox(
+                          width: scrsz.width * 0.75,
+                          height: 45.0,
+                          child: Card(
+                            elevation: 3.0,
+                            color: Colors.white,
+                            child: InkWell(
+                                child: Center(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: const [
+                                      Icon(FontAwesomeIcons.google),
+                                      Text(
+                                        "SIGN UP WITH GOOGLE",
+                                        style: TextStyle(
+                                          fontFamily: "WorkSansSemiBold",
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.w800,
+                                          letterSpacing: 1.0,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // onTap: _registerWithGoogle,
+                                onTap: () {
+                                  final provider =
+                                      Provider.of<GoogleSignInProvider>(
+                                          context,
+                                          listen: false);
+                                  provider.googleLogin();
+                                  // provider.user.id;
+                                }),
                           ),
                         ),
                       ),
+                      
+                      const SizedBox(height: 10.0,),
                     ],
                   ),
                 ),
@@ -174,36 +143,5 @@ class _LoginSignupScreenState extends State<LoginSignupScreen>
         ),
       ),
     );
-  }
-
-  /// Handle Page Changes
-  void _onPageChanged(int index) {
-    if (index == 0) {
-      setState(() {
-        right = Colors.black;
-        left = Colors.white;
-        leftButton = Colors.red[900];
-        rightButton = Colors.transparent;
-      });
-    } else if (index == 1) {
-      setState(() {
-        right = Colors.white;
-        left = Colors.black;
-        leftButton = Colors.transparent;
-        rightButton = Colors.red[900];
-      });
-    }
-  }
-
-  /// Handle Click in Login In button
-  void _onLogInButtonPress() {
-    _pageController.animateToPage(0,
-        duration: const Duration(milliseconds: 500), curve: Curves.decelerate);
-  }
-
-  /// Handle Click on Sign up button
-  void _onSignUpButtonPress() {
-    _pageController?.animateToPage(1,
-        duration: const Duration(milliseconds: 500), curve: Curves.decelerate);
   }
 }

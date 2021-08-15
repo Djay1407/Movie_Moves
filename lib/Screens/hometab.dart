@@ -13,35 +13,21 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-  Box<MovieItem> box;
-  // List<String> paths = [];
-  // List<String> movies = [];
-  // List<String> directors = [];
-
-  // updateValues(String pth, String name, String dir, int editindex) {
-  //   if (editindex == -1) {
-  //     paths.add(pth);
-  //     movies.add(name);
-  //     directors.add(dir);
-  //   } else {
-  //     paths[editindex] = pth;
-  //     movies[editindex] = name;
-  //     directors[editindex] = dir;
-  //   }
-  //   setState(() {});
-  // }
+  Box<MovieItem> box1;
+  Box<MovieItem> box2;
 
   @override
   void initState() {
     super.initState();
-    box = Hive.box<MovieItem>("mybox1");
+    box1 = Hive.box<MovieItem>("watched");
+    box2 = Hive.box<MovieItem>("towatch");
     // box.clear();
   }
 
   @override
   void dispose() {
     super.dispose();
-    Hive.close();
+    // Hive.close();
   }
 
   @override
@@ -65,7 +51,7 @@ class _HomeTabState extends State<HomeTab> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return const AddMovie();
+                      return const AddMovie(watched: true,);
                     },
                   );
                 },
@@ -77,9 +63,9 @@ class _HomeTabState extends State<HomeTab> {
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: SizedBox(
-            height: 200.0,
+            height: 250.0,
             child: ValueListenableBuilder(
-              valueListenable: box.listenable(),
+              valueListenable: box1.listenable(),
               builder: (BuildContext context, Box<MovieItem> box, _) {
                 List<int> keys = box.keys.cast<int>().toList();
                 return ListView.builder(
@@ -91,10 +77,10 @@ class _HomeTabState extends State<HomeTab> {
                     return Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: SizedBox(
-                        width: 125.0,
+                        width: 150.0,
                         child: EventGridItem(
                           movie: movie,
-                          index: key,
+                          watched: true,
                         ),
                       ),
                     );
@@ -104,78 +90,62 @@ class _HomeTabState extends State<HomeTab> {
             ),
           ),
         ),
-        // Padding(
-        //     padding: const EdgeInsets.only(top: 20.0, left: 20.0),
-        //     child: Row(
-        //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //       children: const [
-        //         Text(
-        //           "UNWATCHED",
-        //           style: TextStyle(
-        //               color: Colors.white,
-        //               fontWeight: FontWeight.bold,
-        //               fontSize: 20.0),
-        //         ),
-        //         IconButton(
-        //           onPressed: null,
-        //           icon: Icon(Icons.add, color: Colors.white, size: 25.0),
-        //         )
-        //       ],
-        //     )),
-        // Padding(
-        //   padding: const EdgeInsets.all(10.0),
-        //   child: SizedBox(
-        //     height: 200.0,
-        //     child: ListView.builder(
-        //         scrollDirection: Axis.horizontal,
-        //         itemCount: 5,
-        //         itemBuilder: (BuildContext context, int index) {
-        //           return const Padding(
-        //             padding: EdgeInsets.all(10.0),
-        //             child: SizedBox(
-        //               width: 125.0,
-        //               child: EventGridItem(),
-        //             ),
-        //           );
-        //         }),
-        //   ),
-        // ),
-        // Padding(
-        //     padding: const EdgeInsets.only(top: 20.0, left: 20.0),
-        //     child: Row(
-        //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //       children: const [
-        //         Text(
-        //           "RECOMMENDATIONS",
-        //           style: TextStyle(
-        //               color: Colors.white,
-        //               fontWeight: FontWeight.bold,
-        //               fontSize: 20.0),
-        //         ),
-        //         IconButton(
-        //           onPressed: null,
-        //           icon: Icon(Icons.add, color: Colors.white, size: 25.0),
-        //         )
-        //       ],
-        //     )),
-        // Padding(
-        //   padding: const EdgeInsets.all(10.0),
-        //   child: SizedBox(
-        //     height: 200.0,
-        //     child: ListView.builder(
-        //         scrollDirection: Axis.horizontal,
-        //         itemCount: 5,
-        //         itemBuilder: (BuildContext context, int index) {
-        //           return const Padding(
-        //             padding: EdgeInsets.all(10.0),
-        //             child: SizedBox(
-        //               width: 125.0,
-        //               child: EventGridItem(),
-        //             ),
-        //           );
-        //         }),
-        //   ),
-        // ),
+        Padding(
+          padding: const EdgeInsets.only(top: 20.0, left: 20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                "TO WATCH",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0),
+              ),
+              IconButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const AddMovie(watched: false,);
+                    },
+                  );
+                },
+                icon: const Icon(Icons.add, color: Colors.white, size: 25.0),
+              )
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: SizedBox(
+            height: 250.0,
+            child: ValueListenableBuilder(
+              valueListenable: box2.listenable(),
+              builder: (BuildContext context, Box<MovieItem> box, _) {
+                List<int> keys = box.keys.cast<int>().toList();
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: keys.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final key = keys[index];
+                    final MovieItem movie = box.get(key);
+                    return Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: SizedBox(
+                        width: 150.0,
+                        child: EventGridItem(
+                          movie: movie,
+                          watched:false,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ),
       ],
     );
   }

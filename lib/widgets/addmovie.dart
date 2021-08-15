@@ -3,10 +3,11 @@ import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:movie_moves/model/model.dart';
-
+//Edit this file to take movie
 class AddMovie extends StatefulWidget {
-  const AddMovie({Key key, this.index}) : super(key: key);
-  final int index;
+  const AddMovie({Key key, this.mymovie, @required this.watched}) : super(key: key);
+  final MovieItem mymovie;
+  final bool watched;
 
   @override
   _AddMovieState createState() => _AddMovieState();
@@ -17,7 +18,6 @@ class _AddMovieState extends State<AddMovie> {
   TextEditingController directorNameController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   XFile image;
-  // var scrsz=MediaQuery.of(context).size;
   Box<MovieItem> box;
 
   void getImage() async {
@@ -36,12 +36,11 @@ class _AddMovieState extends State<AddMovie> {
   @override
   void initState() {
     super.initState();
-    box = Hive.box<MovieItem>("mybox1");
-    if (widget.index != null) {
-      final MovieItem thisMovie = box.get(widget.index);
-      movieNameController.text = thisMovie.movieName;
-      directorNameController.text = thisMovie.director;
-      image = XFile(thisMovie.imagePath);
+    box = Hive.box<MovieItem>(widget.watched?"watched":"towatch");
+    if (widget.mymovie != null) {
+      movieNameController.text = widget.mymovie.movieName;
+      directorNameController.text = widget.mymovie.director;
+      image = XFile(widget.mymovie.imagePath);
     }
   }
 
@@ -59,8 +58,8 @@ class _AddMovieState extends State<AddMovie> {
         Center(
           child: Container(
             color: Colors.white70,
-            height: 200.0,
-            width: 125.0,
+            height: 250.0,
+            width: 150.0,
             child: image == null
                 ? Center(
                     child: IconButton(
@@ -73,8 +72,8 @@ class _AddMovieState extends State<AddMovie> {
                     children: [
                       Image.file(
                         File(image.path),
-                        height: 200.0,
-                        width: 125.0,
+                        height: 250.0,
+                        width: 150.0,
                         fit: BoxFit.fill,
                       ),
                       Positioned(
@@ -193,10 +192,10 @@ class _AddMovieState extends State<AddMovie> {
                       movieName: movieNameController.text,
                       director: directorNameController.text,
                       imagePath: image.path);
-                  if (widget.index == null) {
+                  if (widget.mymovie == null) {
                     box.add(temp);
                   } else {
-                    box.put(widget.index, temp);
+                    box.put(widget.mymovie.key, temp);
                   }
                 }
                 Navigator.pop(context);

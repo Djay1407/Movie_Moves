@@ -4,9 +4,9 @@ import 'package:movie_moves/model/model.dart';
 import 'package:movie_moves/widgets/addmovie.dart';
 
 class EventGridItem extends StatelessWidget {
-  const EventGridItem({Key key, this.movie, this.index}) : super(key: key);
+  const EventGridItem({Key key, this.movie, this.watched}) : super(key: key);
   final MovieItem movie;
-  final int index;
+  final bool watched;
 
   BoxDecoration _buildGradientBackground() {
     return const BoxDecoration(
@@ -37,8 +37,6 @@ class EventGridItem extends StatelessWidget {
             child: movie.imagePath != null
                 ? Image.file(
                     File(movie.imagePath),
-                    height: 200.0,
-                    width: 125.0,
                     fit: BoxFit.fill,
                   )
                 : const Placeholder(),
@@ -54,6 +52,8 @@ class EventGridItem extends StatelessWidget {
                 Text(
                   //title in the last of each grid picture
                   movie.movieName,
+                  overflow: TextOverflow.fade,
+                  maxLines: 1,
                   style: const TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 16.0,
@@ -63,6 +63,8 @@ class EventGridItem extends StatelessWidget {
                 //director in the last of each grid picture
                 Text(
                   movie.director,
+                  overflow: TextOverflow.fade,
+                  maxLines: 1,
                   style: const TextStyle(
                     fontSize: 12.0,
                     color: Colors.white70,
@@ -74,35 +76,30 @@ class EventGridItem extends StatelessWidget {
           Positioned(
             top: 10.0,
             left: 5.0,
-            child: Visibility(
-              visible: true,
-              child: InkWell(
-                child:
-                    const Icon(Icons.delete, color: Colors.white, size: 20.0),
-                onTap: () {
-                  movie.delete();
-                },
-              ),
+            child: InkWell(
+              child:
+                  const Icon(Icons.delete, color: Colors.white, size: 20.0),
+              onTap: () {
+                movie.delete();
+              },
             ),
           ),
           Positioned(
             top: 10.0,
             right: 5.0,
-            child: Visibility(
-              visible: true,
-              child: InkWell(
-                child: const Icon(Icons.edit, color: Colors.white, size: 20.0),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AddMovie(
-                        index: index,
-                      );
-                    },
-                  );
-                },
-              ),
+            child: InkWell(
+              child: const Icon(Icons.edit, color: Colors.white, size: 20.0),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AddMovie(
+                      mymovie: movie,
+                      watched: watched,
+                    );
+                  },
+                );
+              },
             ),
           ),
         ],
