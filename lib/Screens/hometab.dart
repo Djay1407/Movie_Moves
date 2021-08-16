@@ -30,6 +30,25 @@ class _HomeTabState extends State<HomeTab> {
     // Hive.close();
   }
 
+  final _addMovieMessage = Center(
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: const [
+        Text(
+          "No Movies Added !!",
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.w600, fontSize: 30.0),
+        ),
+        SizedBox(height: 5.0,),
+        Text(
+          'Tap on "+" icon to add now',
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.w600, fontSize: 20.0),
+        ),
+      ],
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -51,7 +70,9 @@ class _HomeTabState extends State<HomeTab> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return const AddMovie(watched: true,);
+                      return const AddMovie(
+                        watched: true,
+                      );
                     },
                   );
                 },
@@ -68,24 +89,28 @@ class _HomeTabState extends State<HomeTab> {
               valueListenable: box1.listenable(),
               builder: (BuildContext context, Box<MovieItem> box, _) {
                 List<int> keys = box.keys.cast<int>().toList();
-                return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: keys.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final key = keys[index];
-                    final MovieItem movie = box.get(key);
-                    return Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: SizedBox(
-                        width: 150.0,
-                        child: EventGridItem(
-                          movie: movie,
-                          watched: true,
+                if (keys.isNotEmpty) {
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: keys.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final key = keys[index];
+                      final MovieItem movie = box.get(key);
+                      return Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: SizedBox(
+                          width: 150.0,
+                          child: EventGridItem(
+                            movie: movie,
+                            watched: true,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                );
+                      );
+                    },
+                  );
+                } else {
+                  return _addMovieMessage;
+                }
               },
             ),
           ),
@@ -107,7 +132,9 @@ class _HomeTabState extends State<HomeTab> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return const AddMovie(watched: false,);
+                      return const AddMovie(
+                        watched: false,
+                      );
                     },
                   );
                 },
@@ -124,24 +151,28 @@ class _HomeTabState extends State<HomeTab> {
               valueListenable: box2.listenable(),
               builder: (BuildContext context, Box<MovieItem> box, _) {
                 List<int> keys = box.keys.cast<int>().toList();
-                return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: keys.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final key = keys[index];
-                    final MovieItem movie = box.get(key);
-                    return Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: SizedBox(
-                        width: 150.0,
-                        child: EventGridItem(
-                          movie: movie,
-                          watched:false,
+                if (keys.isNotEmpty) {
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: keys.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final key = keys[index];
+                      final MovieItem movie = box.get(key);
+                      return Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: SizedBox(
+                          width: 150.0,
+                          child: EventGridItem(
+                            movie: movie,
+                            watched: false,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                );
+                      );
+                    },
+                  );
+                } else {
+                  return _addMovieMessage;
+                }
               },
             ),
           ),

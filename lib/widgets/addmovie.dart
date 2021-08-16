@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 import 'dart:io';
 import 'package:movie_moves/model/model.dart';
+// import 'dart:developer';
+
 //Edit this file to take movie
 class AddMovie extends StatefulWidget {
-  const AddMovie({Key key, this.mymovie, @required this.watched}) : super(key: key);
+  const AddMovie({Key key, this.mymovie, @required this.watched})
+      : super(key: key);
   final MovieItem mymovie;
   final bool watched;
 
@@ -17,30 +21,76 @@ class _AddMovieState extends State<AddMovie> {
   TextEditingController movieNameController = TextEditingController();
   TextEditingController directorNameController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
-  XFile image;
+  File image;
   Box<MovieItem> box;
 
+  final _movieNameFormKey = GlobalKey<FormState>();
+  final _directorNameFormKey = GlobalKey<FormState>();
+
   void getImage() async {
+    final dir = await path_provider.getApplicationDocumentsDirectory();
+    final posterDirectory = Directory(dir.path + "/images");
+
+    if (!(await posterDirectory.exists())) {
+      posterDirectory.create();
+    }
     final _pickedimage = await _picker.pickImage(source: ImageSource.gallery);
     if (_pickedimage != null) {
+      String filename = _pickedimage.name;
+      final oldFile = File(_pickedimage.path);
+      final newImage =
+          await oldFile.copy(posterDirectory.path + '/' + filename);
+          // log(newImage.path);
+          // log(oldFile.path);
       setState(
         () {
-          image = _pickedimage;
+          image = newImage;
         },
       );
     } else {
-      debugPrint('No image selected.');
+      // log('No image selected.');
     }
+  }
+
+  String _customMovieNameValidator(String value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter movie name';
+    }
+    return null;
+  }
+
+  String _customDirectorNameValidator(String value) {
+    if (value == null || value.isEmpty) {
+      return "Please enter Director's name";
+    }
+    return null;
+  }
+
+  Widget _invalidPosterAlert(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Invalid Poster!'),
+      content: const Text('Please select a poster Image.'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'Cancel'),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'OK'),
+          child: const Text('OK'),
+        ),
+      ],
+    );
   }
 
   @override
   void initState() {
     super.initState();
-    box = Hive.box<MovieItem>(widget.watched?"watched":"towatch");
+    box = Hive.box<MovieItem>(widget.watched ? "watched" : "towatch");
     if (widget.mymovie != null) {
       movieNameController.text = widget.mymovie.movieName;
       directorNameController.text = widget.mymovie.director;
-      image = XFile(widget.mymovie.imagePath);
+      image = File(widget.mymovie.imagePath);
     }
   }
 
@@ -112,18 +162,22 @@ class _AddMovieState extends State<AddMovie> {
                 child: Padding(
                   padding: const EdgeInsets.only(
                       top: 5.0, bottom: 5.0, left: 25.0, right: 25.0),
-                  child: TextFormField(
-                    controller: movieNameController,
-                    keyboardType: TextInputType.name,
-                    style: const TextStyle(
-                        fontFamily: "WorkSansSemiBold",
-                        fontSize: 18.0,
-                        color: Colors.black),
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Name the movie",
-                      hintStyle: TextStyle(
-                          fontFamily: "WorkSansSemiBold", fontSize: 17.0),
+                  child: Form(
+                    key: _movieNameFormKey,
+                    child: TextFormField(
+                      validator: _customMovieNameValidator,
+                      controller: movieNameController,
+                      keyboardType: TextInputType.name,
+                      style: const TextStyle(
+                          fontFamily: "WorkSansSemiBold",
+                          fontSize: 18.0,
+                          color: Colors.black),
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Name the movie",
+                        hintStyle: TextStyle(
+                            fontFamily: "WorkSansSemiBold", fontSize: 17.0),
+                      ),
                     ),
                   ),
                 ),
@@ -149,18 +203,22 @@ class _AddMovieState extends State<AddMovie> {
                 child: Padding(
                   padding: const EdgeInsets.only(
                       top: 5.0, bottom: 5.0, left: 25.0, right: 25.0),
-                  child: TextFormField(
-                    controller: directorNameController,
-                    keyboardType: TextInputType.name,
-                    style: const TextStyle(
-                        fontFamily: "WorkSansSemiBold",
-                        fontSize: 18.0,
-                        color: Colors.black),
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Name of the director",
-                      hintStyle: TextStyle(
-                          fontFamily: "WorkSansSemiBold", fontSize: 17.0),
+                  child: Form(
+                    key: _directorNameFormKey,
+                    child: TextFormField(
+                      validator: _customDirectorNameValidator,
+                      controller: directorNameController,
+                      keyboardType: TextInputType.name,
+                      style: const TextStyle(
+                          fontFamily: "WorkSansSemiBold",
+                          fontSize: 18.0,
+                          color: Colors.black),
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Name of the director",
+                        hintStyle: TextStyle(
+                            fontFamily: "WorkSansSemiBold", fontSize: 17.0),
+                      ),
                     ),
                   ),
                 ),
@@ -185,9 +243,10 @@ class _AddMovieState extends State<AddMovie> {
             ),
             TextButton(
               onPressed: () {
-                if (image != null &&
-                    movieNameController.text != "" &&
-                    directorNameController.text != "") {
+                if (image == null) {
+                  showDialog(context: context, builder: _invalidPosterAlert);
+                } else if (_movieNameFormKey.currentState.validate() &&
+                    _directorNameFormKey.currentState.validate()) {
                   MovieItem temp = MovieItem(
                       movieName: movieNameController.text,
                       director: directorNameController.text,
@@ -197,8 +256,13 @@ class _AddMovieState extends State<AddMovie> {
                   } else {
                     box.put(widget.mymovie.key, temp);
                   }
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Added Movie'),
+                    ),
+                  );
+                  Navigator.pop(context);
                 }
-                Navigator.pop(context);
               },
               child: const Text(
                 "Submit",

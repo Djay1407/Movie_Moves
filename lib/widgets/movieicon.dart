@@ -79,7 +79,8 @@ class EventGridItem extends StatelessWidget {
             child: InkWell(
               child:
                   const Icon(Icons.delete, color: Colors.white, size: 20.0),
-              onTap: () {
+              onTap: () async{
+                await File(movie.imagePath).delete();
                 movie.delete();
               },
             ),
