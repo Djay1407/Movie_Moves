@@ -40,8 +40,8 @@ class _AddMovieState extends State<AddMovie> {
       final oldFile = File(_pickedimage.path);
       final newImage =
           await oldFile.copy(posterDirectory.path + '/' + filename);
-          // log(newImage.path);
-          // log(oldFile.path);
+      // log(newImage.path);
+      // log(oldFile.path);
       setState(
         () {
           image = newImage;
@@ -97,12 +97,12 @@ class _AddMovieState extends State<AddMovie> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      backgroundColor: Colors.grey.shade900,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       title: const Text("Add Movie"),
-      titleTextStyle: const TextStyle(
+      titleTextStyle: TextStyle(
         fontSize: 25.0,
         fontWeight: FontWeight.w700,
-        color: Colors.white70,
+        color: Theme.of(context).primaryColor,
       ),
       children: [
         Center(
@@ -149,12 +149,12 @@ class _AddMovieState extends State<AddMovie> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 " Movie Name",
                 style: TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.w700,
-                    color: Colors.white),
+                    color: Theme.of(context).primaryColor),
               ),
               const SizedBox(height: 5.0),
               Card(
@@ -190,12 +190,12 @@ class _AddMovieState extends State<AddMovie> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 " Director",
                 style: TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.w700,
-                    color: Colors.white),
+                    color: Theme.of(context).primaryColor),
               ),
               const SizedBox(height: 5.0),
               Card(
@@ -236,9 +236,10 @@ class _AddMovieState extends State<AddMovie> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text(
+              child: Text(
                 "Cancel",
-                style: TextStyle(fontSize: 17.0, color: Colors.white),
+                style: TextStyle(
+                    fontSize: 17.0, color: Theme.of(context).primaryColor),
               ),
             ),
             TextButton(

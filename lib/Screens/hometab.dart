@@ -30,27 +30,28 @@ class _HomeTabState extends State<HomeTab> {
     // Hive.close();
   }
 
-  final _addMovieMessage = Center(
+  @override
+  Widget build(BuildContext context) {
+
+    final _addMovieMessage = Center(
     child: Column(
       mainAxisSize: MainAxisSize.min,
-      children: const [
+      children: [
         Text(
           "No Movies Added !!",
           style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.w600, fontSize: 30.0),
+              color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600, fontSize: 30.0),
         ),
-        SizedBox(height: 5.0,),
+        const SizedBox(height: 5.0,),
         Text(
           'Tap on "+" icon to add now',
           style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.w600, fontSize: 20.0),
+              color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600, fontSize: 20.0),
         ),
       ],
     ),
   );
 
-  @override
-  Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
         Padding(
@@ -58,10 +59,10 @@ class _HomeTabState extends State<HomeTab> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 "WATCHED",
                 style: TextStyle(
-                    color: Colors.white,
+                    color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 20.0),
               ),
@@ -76,7 +77,7 @@ class _HomeTabState extends State<HomeTab> {
                     },
                   );
                 },
-                icon: const Icon(Icons.add, color: Colors.white, size: 25.0),
+                icon: Icon(Icons.add, color: Theme.of(context).primaryColor, size: 25.0),
               )
             ],
           ),
@@ -120,10 +121,10 @@ class _HomeTabState extends State<HomeTab> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 "TO WATCH",
                 style: TextStyle(
-                    color: Colors.white,
+                    color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 20.0),
               ),
@@ -138,7 +139,7 @@ class _HomeTabState extends State<HomeTab> {
                     },
                   );
                 },
-                icon: const Icon(Icons.add, color: Colors.white, size: 25.0),
+                icon: Icon(Icons.add, color: Theme.of(context).primaryColor, size: 25.0),
               )
             ],
           ),

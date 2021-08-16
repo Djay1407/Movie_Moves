@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_moves/provider/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:theme_provider/theme_provider.dart';
 
 class NavDrawer extends StatelessWidget {
   const NavDrawer({Key key}) : super(key: key);
@@ -17,7 +18,7 @@ class NavDrawer extends StatelessWidget {
             gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Colors.grey[700],Colors.grey[900]],
+          colors: [Theme.of(context).colorScheme.secondaryVariant,Theme.of(context).colorScheme.secondary],
         )),
         child: ListView(
           children: <Widget>[
@@ -30,7 +31,6 @@ class NavDrawer extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     CircleAvatar(
-                      backgroundColor: Theme.of(context).primaryColor,
                       radius: 32.0,
                       backgroundImage: NetworkImage(user.photoURL),
                     ),
@@ -60,32 +60,35 @@ class NavDrawer extends StatelessWidget {
             //   child: ListTile(
             //     trailing: Icon(
             //       Icons.menu,
-            //       color: Colors.white,
+            //       color: Theme.of(context).primaryColor,
             //     ),
-            //     title: Text("Menu", style: TextStyle(color: Colors.white,fontSize: 18.0)),
+            //     title: Text("Menu", style: TextStyle(color: Theme.of(context).primaryColor,fontSize: 18.0)),
             //   ),
             // ),
             SizedBox(
               height: scrsz.height*0.6 ,
             ),
-            const Padding(
-              padding: EdgeInsets.only(left: 17.0, right: 15.0),
+             Padding(
+              padding: const EdgeInsets.only(left: 17.0, right: 15.0),
               child: ListTile(
                 trailing: Icon(
                   Icons.colorize_rounded,
-                  color: Colors.white,
+                  color: Theme.of(context).primaryColor,
                 ),
-                title: Text("Change Theme", style: TextStyle(color: Colors.white,fontSize: 18.0)),
+                title: Text("Change Theme", style: TextStyle(color: Theme.of(context).primaryColor,fontSize: 18.0)),
+                onTap: (){
+                  ThemeProvider.controllerOf(context).nextTheme();
+                },
               ),
             ),
              Padding(
               padding: const EdgeInsets.only(left: 17.0, right: 15.0),
               child: ListTile(
-                trailing: const Icon(
+                trailing: Icon(
                   Icons.logout,
-                  color: Colors.white,
+                  color: Theme.of(context).primaryColor,
                 ),
-                title: const Text("Sign Out", style: TextStyle(color: Colors.white,fontSize: 18.0)),
+                title: Text("Sign Out", style: TextStyle(color: Theme.of(context).primaryColor,fontSize: 18.0)),
                 onTap: (){
                   final provider= Provider.of<GoogleSignInProvider>(context,listen: false);
                   provider.logout();

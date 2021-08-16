@@ -26,29 +26,34 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
               fit: BoxFit.fill,
             ),
             gradient: LinearGradient(
-              colors: [Colors.red[700], Colors.red[900]],
+              colors: [
+                Theme.of(context).colorScheme.primaryVariant,
+                Theme.of(context).colorScheme.primary,
+                Theme.of(context).colorScheme.primary
+              ],
               begin: const FractionalOffset(0.0, 0.0),
               end: const FractionalOffset(1.0, 1.0),
-              stops: const [0.0, 1.0],
+              stops: const [0.0, 0.7, 1.0],
               tileMode: TileMode.clamp,
             ),
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(top: 75.0),
                 child: Center(
-                  child: Text(
-                    " Movie\nMoves",
-                    style: TextStyle(
-                      fontSize: scrsz.height * 0.07,
-                      fontStyle: FontStyle.italic,
-                      letterSpacing: 7.0,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
+                  // child: Text(
+                  //   " Movie\nMoves",
+                  //   style: TextStyle(
+                  //     fontSize: scrsz.height * 0.07,
+                  //     fontStyle: FontStyle.italic,
+                  //     letterSpacing: 7.0,
+                  //     fontWeight: FontWeight.w800,
+                  //   ),
+                  // ),
+                  child: Image.asset("assets/login_signup/logo.png")
                 ),
               ),
               Padding(
@@ -91,7 +96,9 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10.0,),
+                      const SizedBox(
+                        height: 10.0,
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: SizedBox(
@@ -123,8 +130,7 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                                 // onTap: _registerWithGoogle,
                                 onTap: () {
                                   final provider =
-                                      Provider.of<GoogleSignInProvider>(
-                                          context,
+                                      Provider.of<GoogleSignInProvider>(context,
                                           listen: false);
                                   provider.googleLogin();
                                   // provider.user.id;
@@ -132,12 +138,14 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                           ),
                         ),
                       ),
-                      
-                      const SizedBox(height: 10.0,),
+                      const SizedBox(
+                        height: 10.0,
+                      ),
                     ],
                   ),
                 ),
-              )
+              ),
+              const SizedBox(height:10.0),
             ],
           ),
         ),
