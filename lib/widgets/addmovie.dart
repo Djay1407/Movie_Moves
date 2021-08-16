@@ -98,7 +98,7 @@ class _AddMovieState extends State<AddMovie> {
   Widget build(BuildContext context) {
     return SimpleDialog(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      title: const Text("Add Movie"),
+      title: Text(widget.mymovie == null?"Add Movie":"Edit Movie"),
       titleTextStyle: TextStyle(
         fontSize: 25.0,
         fontWeight: FontWeight.w700,
